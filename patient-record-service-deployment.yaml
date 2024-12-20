@@ -1,0 +1,36 @@
+# patient-record-service-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patient-record-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: patient-record-service
+  template:
+    metadata:
+      labels:
+        app: patient-record-service
+    spec:
+      containers:
+      - name: patient-record-service
+        image: gcr.io/healthsync-project-445302/patient-record-service
+        ports:
+        - containerPort: 30001
+        env:
+        - name: MONGO_URI
+          value: "mongodb+srv://navodasathsarani:chQf3ctN1Xwx7H6s@health-sync-mongo-db.okigg.mongodb.net/health-db?retryWrites=true&w=majority&appName=health-sync-mongo-db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: patient-record-service
+spec:
+  selector:
+    app: patient-record-service
+  ports:
+  - protocol: TCP
+    port: 30001
+    targetPort: 30001
+  type: ClusterIP

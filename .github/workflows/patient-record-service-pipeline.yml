@@ -1,0 +1,42 @@
+name: CI/CD Pipeline for Patient Record Service
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the Code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 2: Set Up Google Cloud CLI
+    - name: Set up Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: healthsync-project-445302
+
+    # Step 3: Authenticate Docker with GCR
+    - name: Authenticate Docker
+      run: gcloud auth configure-docker
+
+    # Step 4: Build and Push Docker Image
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }} .
+        docker push gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}
+
+    # Step 5: Update Deployment File
+    - name: Update Kubernetes Deployment File
+      run: |
+        sed -i "s|<IMAGE>|gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}|g" patient-record-service-deployment.yaml
+
+    # Step 6: Deploy to Kubernetes
+    - name: Apply Kubernetes Configuration
+      run: |
+        kubectl apply -f patient-record-service-deployment.yaml
