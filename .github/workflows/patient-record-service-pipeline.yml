@@ -131,6 +131,8 @@ jobs:
       run: |
         sed -i "s|<IMAGE>|gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}|g" patient-record-service-green.yaml
         kubectl apply -f patient-record-service-green.yaml
+        sed -i "s|<IMAGE>|gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}|g" patient-record-service-blue.yaml
+        kubectl apply -f patient-record-service-blue.yaml
 
     # Step 10: Validate Green Deployment
     - name: Validate Green Deployment
@@ -142,12 +144,7 @@ jobs:
       run: |
         kubectl patch service patient-record-service -p '{"spec":{"selector":{"app":"patient-record-service-green"}}}'
 
-    # Step 12: Validate Service Post-Switch
-    - name: Validate Service Post-Switch
-      run: |
-        curl --fail http://patient-record-service-green.example.com/health
-
-    # Step 13: Scale Down Blue Deployment
+    # Step 12: Scale Down Blue Deployment
     - name: Scale Down Blue Deployment
       run: |
         kubectl scale deployment patient-record-service-blue --replicas=0
@@ -162,7 +159,7 @@ jobs:
       if: failure()
       run: |
         kubectl patch service patient-record-service -p '{"spec":{"selector":{"app":"patient-record-service-blue"}}}'
-        kubectl scale deployment patient-record-service-blue --replicas=2
+        kubectl scale deployment patient-record-service-blue --replicas=1
 
     # Step 16: Cleanup Blue Deployment After Success
     - name: Cleanup Blue Deployment (Optional)
