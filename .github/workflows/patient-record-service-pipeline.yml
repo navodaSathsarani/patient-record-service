@@ -25,13 +25,10 @@ jobs:
     - name: Authenticate Docker
       run: gcloud auth configure-docker
 
-    - name: Authenticate Docker
-      run: |
-        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://gcr.io
     # Step 4: Build and Push Docker Image
     - name: Build and Push Docker Image
       run: |
-        docker build -t gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }} .
+        docker buildx build --platform linux/amd64 -t gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }} .
         docker push gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}
 
     # Step 5: Update Deployment File
