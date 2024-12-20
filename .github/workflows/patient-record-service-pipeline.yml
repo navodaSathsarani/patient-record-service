@@ -29,7 +29,7 @@ jobs:
 
     # Step 3: Authenticate Docker with GCR
     - name: Authenticate Docker
-      run: gcloud auth configure-docker
+      run: gcloud auth configure-docker gcr.io
 
     # Step 4: Build and Push Docker Image
     - name: Build and Push Docker Image
@@ -41,6 +41,10 @@ jobs:
     - name: Update Kubernetes Deployment File
       run: |
         sed -i "s|<IMAGE>|gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}|g" patient-record-service-deployment.yaml
+
+    - name: Set up Kubernetes Credentials
+      run: |
+          gcloud container clusters get-credentials healthsync-cluster --zone us-east1 --project healthsync-project-445302
 
     # Step 6: Deploy to Kubernetes
     - name: Apply Kubernetes Configuration
