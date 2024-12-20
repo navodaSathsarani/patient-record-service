@@ -41,6 +41,9 @@ jobs:
     - name: Update Kubernetes Deployment File
       run: |
         sed -i "s|<IMAGE>|gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}|g" patient-record-service-deployment.yaml
+    - name: Install Gcloud components
+      run: |
+          gcloud components install gke-gcloud-auth-plugin
 
     - name: Set up Kubernetes Credentials
       run: |
