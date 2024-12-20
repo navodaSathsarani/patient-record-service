@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const app = express();
-const PORT = process.env.PORT || 30001;
+
 
 // Middleware
 app.use(bodyParser.json());
@@ -90,7 +90,4 @@ app.delete('/patients/:id', async (req, res) => {
     }
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Patient Record Service is running on port ${PORT}`);
-});
+module.exports = app;
