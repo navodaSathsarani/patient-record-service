@@ -1,35 +1,36 @@
-swagger: "2.0"
-info:
-  title: "Patient Record Service API"
-  description: "API Gateway for Patient Record Service"
-  version: "1.0.0"
-host: "{GATEWAY_ID}.gateway.dev"
-x-google-backend:
-  address: http://<CLUSTER_EXTERNAL_IP>:80
-paths:
-  /patients:
-    get:
-      summary: "Get patient records"
-      operationId: "getPatients"
-      responses:
-        '200':
-          description: "A list of patients"
-    post:
-      summary: "Add a new patient record"
-      operationId: "addPatient"
-      parameters:
-        - in: "body"
-          name: "body"
-          required: true
-          schema:
-            type: "object"
-            properties:
-              name:
-                type: "string"
-              age:
-                type: "integer"
-              gender:
-                type: "string"
-      responses:
-        '201':
-          description: "Patient record created successfully"
+# patient-record-service-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patient-record-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: patient-record-service
+  template:
+    metadata:
+      labels:
+        app: patient-record-service
+    spec:
+      containers:
+      - name: patient-record-service
+        image: gcr.io/healthsync-project-445302/patient-record-service
+        ports:
+        - containerPort: 30001
+        env:
+        - name: MONGO_URI
+          value: "mongodb+srv://navodasathsarani:chQf3ctN1Xwx7H6s@health-sync-mongo-db.okigg.mongodb.net/health-db?retryWrites=true&w=majority&appName=health-sync-mongo-db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: patient-record-service
+spec:
+  selector:
+    app: patient-record-service
+  ports:
+  - protocol: TCP
+    port: 30001
+    targetPort: 30001
+  type: ClusterIP
