@@ -1,3 +1,70 @@
+# name: CI/CD Pipeline for Patient Record Service
+
+# on:
+#   push:
+#     branches:
+#       - main  # Trigger the workflow on push to the main branch
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     # Step 1: Checkout the Code
+#     - name: Checkout Code
+#       uses: actions/checkout@v3
+#    # Step 2: Set Up Node.js
+#     - name: Set up Node.js
+#       uses: actions/setup-node@v3
+#       with:
+#           node-version: '16' # Ensure the Node.js version matches your project
+
+#    # Step 3: Install Dependencies
+#     - name: Install Dependencies
+#       run: npm install
+
+#   # Step 4: Run Tests
+#     - name: Run Tests
+#       run: npm test
+#    # Step 5: Set Up Google Cloud CLI
+#     - name: Authenticate with Google Cloud
+#       uses: google-github-actions/auth@v1
+#       with:
+#           credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+#       # Step 6: Set Up Google Cloud CLI
+#     - name: Set up Google Cloud CLI
+#       uses: google-github-actions/setup-gcloud@v1
+#       with:
+#           project_id: healthsync-project-445302
+
+
+#     # Step 7: Authenticate Docker with GCR
+#     - name: Authenticate Docker
+#       run: gcloud auth configure-docker gcr.io
+
+#     # Step 8: Build and Push Docker Image
+#     - name: Build and Push Docker Image
+#       run: |
+#         docker buildx build --platform linux/amd64 -t gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }} .
+#         docker push gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}
+
+#     # Step 9: Update Deployment File
+#     - name: Update Kubernetes Deployment File
+#       run: |
+#         sed -i "s|<IMAGE>|gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}|g" patient-record-service-deployment.yaml
+#     - name: Install Gcloud components
+#       run: |
+#           gcloud components install gke-gcloud-auth-plugin
+
+#     - name: Set up Kubernetes Credentials
+#       run: |
+#           gcloud container clusters get-credentials healthsync-cluster --zone us-east1 --project healthsync-project-445302
+
+#     # Step 10: Deploy to Kubernetes
+#     - name: Apply Kubernetes Configuration
+#       run: |
+#         kubectl apply -f patient-record-service-deployment.yaml
 name: CI/CD Pipeline for Patient Record Service
 
 on:
