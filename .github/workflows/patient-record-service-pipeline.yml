@@ -117,6 +117,15 @@ jobs:
         docker buildx build --platform linux/amd64 -t gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }} .
         docker push gcr.io/healthsync-project-445302/patient-record-service:${{ github.sha }}
 
+    - name: Install Gcloud components
+      run: |
+          gcloud components install gke-gcloud-auth-plugin
+
+    - name: Set up Kubernetes Credentials
+      run: |
+          gcloud container clusters get-credentials healthsync-cluster --zone us-east1 --project healthsync-project-445302
+
+
     # Step 9: Deploy Green Deployment
     - name: Deploy Green Deployment
       run: |
