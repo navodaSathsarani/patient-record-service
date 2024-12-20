@@ -25,6 +25,9 @@ jobs:
     - name: Authenticate Docker
       run: gcloud auth configure-docker
 
+    - name: Authenticate Docker
+      run: |
+        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://gcr.io
     # Step 4: Build and Push Docker Image
     - name: Build and Push Docker Image
       run: |
