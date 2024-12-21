@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: patient-record-service
-        image: gcr.io/healthsync-project-445302/patient-record-service:latest
+        image: gcr.io/healthsync-project-445302/patient-record-service
         readinessProbe:
             httpGet: # make an HTTP request
               port: 3001 # port to use
