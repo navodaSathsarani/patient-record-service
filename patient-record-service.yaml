@@ -7,6 +7,6 @@ spec:
     app: patient-record-service-green  # Initially set to green
   ports:
   - protocol: TCP
-    port: 80
+    port: 3001
     targetPort: 30001
   type: ClusterIP
