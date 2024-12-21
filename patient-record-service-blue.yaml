@@ -14,7 +14,28 @@ spec:
     spec:
       containers:
       - name: patient-record-service
-        image: gcr.io/healthsync-project-445302/patient-record-service
+        image: gcr.io/healthsync-project-445302/patient-record-service:latest
+        readinessProbe:
+            httpGet: # make an HTTP request
+              port: 3001 # port to use
+              path: /readiness # endpoint to hit
+              scheme: HTTP # or HTTPS
+            initialDelaySeconds: 3 # how long to wait before checking
+            periodSeconds: 3 # how long to wait between checks
+            successThreshold: 1 # how many successes to hit before accepting
+            failureThreshold: 1 # how many failures to accept before failing
+            timeoutSeconds: 1 # how long to wait for a response
+          # the livenessProbe probe details
+        livenessProbe:
+            httpGet: # make an HTTP request
+              port: 3001 # port to use
+              path: /healthcheck # endpoint to hit
+              scheme: HTTP # or HTTPS
+            initialDelaySeconds: 3 # how long to wait before checking
+            periodSeconds: 3 # how long to wait between checks
+            successThreshold: 1 # how many successes to hit before accepting
+            failureThreshold: 1 # how many failures to accept before failing
+            timeoutSeconds: 1 # how long to wait for a response
         ports:
         - containerPort: 3001
         env:

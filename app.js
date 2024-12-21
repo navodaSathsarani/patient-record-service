@@ -3,7 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
+const healthCheck = require('express-healthcheck');
 const app = express();
 
 
@@ -15,7 +15,25 @@ mongoose.connect('mongodb+srv://navodasathsarani:chQf3ctN1Xwx7H6s@health-sync-mo
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('Connected to MongoDB')).catch(err => console.error('MongoDB connection error:', err));
-
+let healthy = true;
+// sets the Pod status to `unhealthy`
+app.use('/unhealthy', function(req, res, next){
+    healthy = false;
+    res.status(200).json({ healthy });
+});
+// returns the liveness response
+app.use('/healthcheck', healthyIntercept, healthCheck());
+// function to `check` liveness
+function healthyIntercept(req, res, next){
+    if(healthy){
+        next();
+    } else {
+        next(new Error('unhealthy'));
+    }
+}
+app.use('/readiness', function (req, res, next) {
+    res.status(200).json({ ready });
+});
 // Define Patient Schema and Model
 const patientSchema = new mongoose.Schema({
     name: { type: String, required: true },
