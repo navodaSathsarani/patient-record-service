@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 mongoose.connect('mongodb+srv://navodasathsarani:chQf3ctN1Xwx7H6s@health-sync-mongo-db.okigg.mongodb.net/health-db?retryWrites=true&w=majority&appName=health-sync-mongo-db', {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).then(() => console.log('Connected to MongoDB')).catch(err => console.error('MongoDB connection error:', err));
+}).then(() => console.log('Connected to MongoDB server')).catch(err => console.error('MongoDB connection error:', err));
 const router = express.Router();
 router.use(bodyParser.json());
 
