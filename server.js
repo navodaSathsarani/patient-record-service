@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 // Environment Variables
 const PORT = process.env.PORT || 3001;
-const BASE_PATH = process.env.BASE_PATH || '/api/patient-record-service';
+const BASE_PATH = process.env.BASE_PATH || '/api/v1/patient-record-service';
 const MONGO_URI = process.env.MONGO_URI;
 
 // MongoDB Connection

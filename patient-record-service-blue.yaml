@@ -20,13 +20,13 @@ spec:
         readinessProbe:
             httpGet:
               port: 3001
-              path: /api/patient-record-service/readiness
+              path: /api/v1/patient-record-service/readiness
             initialDelaySeconds: 40
             periodSeconds: 10
         livenessProbe:
             httpGet:
               port: 3001
-              path: /api/patient-record-service/healthcheck
+              path: /api/v1/patient-record-service/healthcheck
             initialDelaySeconds: 40
             periodSeconds: 10
         env:

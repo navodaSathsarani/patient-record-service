@@ -5,7 +5,7 @@ const patientRoutes = require('../app'); // Adjust path based on your directory 
 
 const app = express();
 app.use(express.json());
-app.use('/api/patient-record-service', patientRoutes);
+app.use('/api/v1/patient-record-service', patientRoutes);
 
 beforeAll(async () => {
     // Connect to a test MongoDB database
@@ -20,9 +20,9 @@ afterAll(async () => {
 describe('Patient API Endpoints', () => {
     let createdPatientId;
 
-    test('POST /api/patient-record-service/patients - Create a new patient', async () => {
+    test('POST /api/v1/patient-record-service/patients - Create a new patient', async () => {
         const response = await request(app)
-            .post('/api/patient-record-service/patients')
+            .post('/api/v1/patient-record-service/patients')
             .send({
                 name: 'John Doe',
                 age: 35,
@@ -38,24 +38,24 @@ describe('Patient API Endpoints', () => {
         createdPatientId = response.body.patient._id; // Save ID for later tests
     });
 
-    test('GET /api/patient-record-service/patients - Get all patients', async () => {
-        const response = await request(app).get('/api/patient-record-service/patients');
+    test('GET /api/v1/patient-record-service/patients - Get all patients', async () => {
+        const response = await request(app).get('/api/v1/patient-record-service/patients');
 
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBeGreaterThan(0);
     });
 
-    test('GET /api/patient-record-service/patients/:id - Get patient by ID', async () => {
-        const response = await request(app).get(`/api/patient-record-service/patients/${createdPatientId}`);
+    test('GET /api/v1/patient-record-service/patients/:id - Get patient by ID', async () => {
+        const response = await request(app).get(`/api/v1/patient-record-service/patients/${createdPatientId}`);
 
         expect(response.statusCode).toBe(200);
         expect(response.body).toHaveProperty('name', 'John Doe');
     });
 
-    test('PUT /api/patient-record-service/patients/:id - Update a patient', async () => {
+    test('PUT /api/v1/patient-record-service/patients/:id - Update a patient', async () => {
         const response = await request(app)
-            .put(`/api/patient-record-service/patients/${createdPatientId}`)
+            .put(`/api/v1/patient-record-service/patients/${createdPatientId}`)
             .send({
                 age: 36,
                 prescriptions: ['Metformin', 'Vitamin D']
@@ -67,15 +67,15 @@ describe('Patient API Endpoints', () => {
         expect(response.body.patient.prescriptions).toContain('Vitamin D');
     });
 
-    test('DELETE /api/patient-record-service/patients/:id - Delete a patient', async () => {
-        const response = await request(app).delete(`/api/patient-record-service/patients/${createdPatientId}`);
+    test('DELETE /api/v1/patient-record-service/patients/:id - Delete a patient', async () => {
+        const response = await request(app).delete(`/api/v1/patient-record-service/patients/${createdPatientId}`);
 
         expect(response.statusCode).toBe(200);
         expect(response.body).toHaveProperty('message', 'Patient record deleted successfully');
     });
 
-    test('GET /api/patient-record-service/patients/:id - Get non-existent patient', async () => {
-        const response = await request(app).get(`/api/patient-record-service/patients/${createdPatientId}`);
+    test('GET /api/v1/patient-record-service/patients/:id - Get non-existent patient', async () => {
+        const response = await request(app).get(`/api/v1/patient-record-service/patients/${createdPatientId}`);
 
         expect(response.statusCode).toBe(404);
         expect(response.body).toHaveProperty('message', 'Patient not found');
