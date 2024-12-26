@@ -14,8 +14,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    // Drop the database and close the connection after tests
-    await mongoose.connection.db.dropDatabase();
     await mongoose.connection.close();
 });
 
@@ -35,7 +33,7 @@ describe('Patient API Endpoints', () => {
             });
 
         expect(response.statusCode).toBe(201);
-        expect(response.body).toHaveProperty('message', 'Patient record created successfully');
+        expect(response.body).toHaveProperty('message', 'Patient record is created successfully');
         expect(response.body.patient).toHaveProperty('_id');
         createdPatientId = response.body.patient._id; // Save ID for later tests
     });
