@@ -52,7 +52,7 @@ router.post('/patients', async (req, res) => {
     try {
         const patient = new Patient(req.body);
         await patient.save();
-        res.status(201).json({ message: 'Patient record created successfully', patient });
+        res.status(201).json({ message: 'Patient record is created successfully', patient });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
