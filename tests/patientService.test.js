@@ -10,7 +10,7 @@ app.use('/api/v1/patient-record-service', patientRoutes);
 beforeAll(async () => {
     // Connect to a test MongoDB database
     const TEST_DB_URI = "mongodb+srv://navodasathsarani:chQf3ctN1Xwx7H6s@health-sync-mongo-db.okigg.mongodb.net/health-db?retryWrites=true&w=majority&appName=health-sync-mongo-db";
-    await mongoose.connect(TEST_DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(TEST_DB_URI, { });
 });
 
 afterAll(async () => {
