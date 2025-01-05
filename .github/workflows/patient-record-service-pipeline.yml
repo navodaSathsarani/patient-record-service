@@ -248,9 +248,11 @@ jobs:
     - name: Rename Current Green to Blue
       if: success()
       run: |
-        kubectl scale deployment patient-record-service-green --replicas=0
-        kubectl patch deployment patient-record-service-green -p '{"metadata":{"name":"patient-record-service-blue"}}}'
-        kubectl scale deployment patient-record-service-blue --replicas=1
+       kubectl scale deployment patient-record-service-green --replicas=0
+       kubectl get deployment patient-record-service-green -o yaml | \
+       sed 's/name: patient-record-service-green/name: patient-record-service-blue/' | \
+       kubectl apply -f -
+       kubectl scale deployment patient-record-service-blue --replicas=1
 
     # Step 14: Fallback to Blue (if Green Fails)
     - name: Rollback to Blue Deployment
